@@ -1,0 +1,27 @@
+@using Microsoft.Extensions.AI
+
+<div class="d-flex @_containerClass mb-3">
+    <div class="flex-grow-1 @_textClass rounded p-2">
+        @Model.Text
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public required ChatMessage Model { get; set; }
+
+    private String _containerClass =>
+        Model.Role == ChatRole.User
+            ? "justify-content-end"
+            : "";
+    
+    private String _textClass =>
+        Model.Role == ChatRole.Assistant
+            ? "bg-white border"
+            : Model.Role == ChatRole.User
+                ? "bg-secondary text-white"
+                : Model.Role == ChatRole.System
+                    ? "bg-info border"
+                    : "bg-primary border";
+
+}
