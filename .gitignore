@@ -58,3 +58,5 @@ nunit-*.xml
 
 # OsX
 .DS_Store
+
+*.DotSettings.user
