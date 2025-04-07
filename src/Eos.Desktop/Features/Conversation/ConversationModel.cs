@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices.JavaScript;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -33,7 +34,9 @@ public sealed class ConversationModel
 
     private String _faultedMessage = String.Empty;
 
-    public List<MessageModel> Messages { get; } = [];
+    public List<MessageModel> Messages { get; } =
+        [.. Enumerable.Repeat(new MessageModel(new(ChatRole.Assistant, new String('a', 256))), 64)];
+
     public String Message { get; set; } = String.Empty;
     public Boolean Loading { get; private set; }
     public String Error { get; private set; } = String.Empty;

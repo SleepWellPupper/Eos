@@ -1,9 +1,8 @@
 @page "/conversation"
-@using System.Xml.Schema
-@using Microsoft.Extensions.AI
+
 <h3>Conversation</h3>
 
-<div class="d-flex flex-column">
+<div class="d-flex flex-column" style="height: 80%">
    <select class="custom-select mb-2" @bind="@_model.Model">
       @foreach (var model in _model.Models)
       {
@@ -11,36 +10,35 @@
       }
    </select>
 
-   <div class="bg-light rounded p-2 mb-2 d-flex w-100 flex-column">
-      @foreach (var message in _model.Messages)
-      {
-         <Message Model="message"/>
-      }
-      <Message Model="__model"></Message>
-      @if (_model.Loading)
-      {
-         <div class="d-flex mb-1">
-            <div class="flex-grow-1 bg-white border rounded p-2 justify-content-center">
-               <div class="spinner-border" role="status">
-                  <span class="sr-only">Loading...</span>
+   <div class="bg-light rounded p-2 mb-2 d-flex flex-column overflow-auto">
+         @foreach (var message in _model.Messages)
+         {
+            <Message Model="message"/>
+         }
+         @if (_model.Loading)
+         {
+            <div class="d-flex mb-1">
+               <div class="flex-grow-1 bg-white border rounded p-2 justify-content-center">
+                  <div class="spinner-border" role="status">
+                     <span class="sr-only">Loading...</span>
+                  </div>
                </div>
             </div>
-         </div>
-         <button class="btn btn-sm btn-outline-warning text-muted mb-2" @onclick="_model.CancelSubmission">
-            cancel
-         </button>
-      }
-      @if (_model.Error is not null and not [])
-      {
-         <div class="d-flex mb-1">
-            <div class="flex-grow-1 bg-danger border rounded p-2 justify-content-center">
-               @_model.Error
+            <button class="btn btn-sm btn-outline-warning text-muted mb-2" @onclick="_model.CancelSubmission">
+               cancel
+            </button>
+         }
+         @if (_model.Error is not null and not [])
+         {
+            <div class="d-flex mb-1">
+               <div class="flex-grow-1 bg-danger border rounded p-2 justify-content-center">
+                  @_model.Error
+               </div>
             </div>
-         </div>
-         <button class="btn btn-sm btn-outline-info text-muted mb-2" @onclick="_model.Submit">
-            retry
-         </button>
-      }
+            <button class="btn btn-sm btn-outline-info text-muted mb-2" @onclick="_model.Submit">
+               retry
+            </button>
+         }
    </div>
    <div>
             <textarea type="text"
@@ -60,8 +58,6 @@
       _model = model;
    }
 
-   private MessageModel __model = new MessageModel(new ChatMessage(ChatRole.Assistant, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"));
-   
    private async Task OnKeyDown(KeyboardEventArgs args)
    {
       if (args is
