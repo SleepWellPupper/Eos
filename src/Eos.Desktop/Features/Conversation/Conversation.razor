@@ -1,46 +1,62 @@
 @page "/conversation"
+@using System.Xml.Schema
+@using Microsoft.Extensions.AI
 
-<h3>Conversation</h3>
+<div class="d-flex flex-column vh-100 overflow-hidden" style="padding: 0 !important;">
+   
+    <div class="p-3" style="background-color: #d4d4d4">
+        <h3 class="">Conversation</h3>
 
-<div class="d-flex flex-column" style="height: 80%">
-   <select class="custom-select mb-2" @bind="@_model.Model">
-      @foreach (var model in _model.Models)
+        <select class="custom-select" @bind="@_model.Model">
+            @foreach (var model in _model.Models)
+            {
+                <option value="@model">@model</option>
+            }
+        </select>
+    </div>
+
+   <div class="bg-light rounded p-3 d-flex flex-column overflow-auto flex-grow-1" >
+      @foreach (var message in _model.Messages)
       {
-         <option value="@model">@model</option>
+         <Message Model="message"/>
       }
-   </select>
+      <Message Model="__model" />
+      <Message Model="__model" />
+      <Message Model="__model" />
+      <Message Model="__model" />
+      <Message Model="__model" />
+      <Message Model="__model" />
+      <Message Model="__model" />
+      <Message Model="__model" />
+  
+      @if (_model.Loading)
+      {
+         <div class="d-flex mb-1">
+            <div class="flex-grow-1 bg-white border rounded p-2 justify-content-center">
+               <div class="spinner-border" role="status">
+                  <span class="sr-only">Loading...</span>
+               </div>
+            </div>
+         </div>
+         <button class="btn btn-sm btn-outline-warning text-muted mb-2" @onclick="_model.CancelSubmission">
+            cancel
+         </button>
+      }
 
-   <div class="bg-light rounded p-2 mb-2 d-flex flex-column overflow-auto">
-         @foreach (var message in _model.Messages)
-         {
-            <Message Model="message"/>
-         }
-         @if (_model.Loading)
-         {
-            <div class="d-flex mb-1">
-               <div class="flex-grow-1 bg-white border rounded p-2 justify-content-center">
-                  <div class="spinner-border" role="status">
-                     <span class="sr-only">Loading...</span>
-                  </div>
-               </div>
+      @if (_model.Error is not null and not [])
+      {
+         <div class="d-flex mb-1">
+            <div class="flex-grow-1 bg-danger border rounded p-2 justify-content-center">
+               @_model.Error
             </div>
-            <button class="btn btn-sm btn-outline-warning text-muted mb-2" @onclick="_model.CancelSubmission">
-               cancel
-            </button>
-         }
-         @if (_model.Error is not null and not [])
-         {
-            <div class="d-flex mb-1">
-               <div class="flex-grow-1 bg-danger border rounded p-2 justify-content-center">
-                  @_model.Error
-               </div>
-            </div>
-            <button class="btn btn-sm btn-outline-info text-muted mb-2" @onclick="_model.Submit">
-               retry
-            </button>
-         }
+         </div>
+         <button class="btn btn-sm btn-outline-info text-muted mb-2" @onclick="_model.Submit">
+            retry
+         </button>
+      }
    </div>
-   <div>
+
+    <div class="p-3" style="background-color:#D4D4D4">
             <textarea type="text"
                       class="form-control"
                       placeholder="Type your message..."
@@ -58,6 +74,8 @@
       _model = model;
    }
 
+   private MessageModel __model = new MessageModel(new ChatMessage(ChatRole.Assistant, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"));
+   
    private async Task OnKeyDown(KeyboardEventArgs args)
    {
       if (args is
